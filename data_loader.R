@@ -39,7 +39,7 @@ indicators <- c("Monthly year-on-year inflation" = "ESTAT/prc_hicp_manr/M.RCH_A.
                 "Yearly average inflation" = "ESTAT/prc_hicp_aind/A.RCH_A_AVG.CP00.")
 
 as.data.table(mds("ESTAT/prc_hicp_manr/M.RCH_A.CP00.SE", startPeriod = 2025))
-
+as.data.table(mds("ESTAT/prc_hicp_aind/A.RCH_A_AVG.CP00.SE", startPeriod = 2024))
 
 
 
