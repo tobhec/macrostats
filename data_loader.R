@@ -3,7 +3,7 @@ remotes::install_github('zeugner/MD3'); #bit64 #zoo
 remotes::install_github('zeugner/MDstats') #XML #rsdmx
 library(MDstats)
 
-countries <- c("Austria"     = "AT", 
+countries <- list("Austria"     = "AT", 
                "Belgium"     = "BE", 
                "Bulgaria"    = "BG", 
                "Cyprus"      = "CY", 
@@ -38,10 +38,18 @@ years <- c("2025", "2024", "2023", "2022", "2021", "2020",
 indicators <- c("Monthly year-on-year inflation" = "ESTAT/prc_hicp_manr/M.RCH_A.CP00.",
                 "Yearly average inflation" = "ESTAT/prc_hicp_aind/A.RCH_A_AVG.CP00.")
 
-as.data.table(mds("ESTAT/prc_hicp_manr/M.RCH_A.CP00.SE", startPeriod = 2025))
-as.data.table(mds("ESTAT/prc_hicp_aind/A.RCH_A_AVG.CP00.SE", startPeriod = 2024))
+indic1 <- as.data.table(mds("ESTAT/prc_hicp_manr/M.RCH_A.CP00.SE", startPeriod = 2025-05))
+indic2 <- as.data.table(mds("ESTAT/prc_hicp_aind/A.RCH_A_AVG.CP00.SE+DE", startPeriod = 2022))
 
+indic1$Country <- "SE"
+setnames(indic1, old = c("Country", "TIME", "obs_value"), new = c("Country", "Month", "Value"))
+indic1 <- dcast(indic1, Country ~ Month, value.var = "Value")
 
+setnames(indic2, old = c("geo", "TIME", "obs_value"), new = c("Country", "Year", "Value"))
+indic2 <- dcast(indic2, Country ~ Year, value.var = "Value")
+
+indics <- list("Monthly Year-on-Year Inflation" = indic1, 
+               "Yearly average inflation" = indic2)
 
 
 
