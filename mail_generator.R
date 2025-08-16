@@ -14,28 +14,28 @@ for (indic in indics) {
   indic_colored <- indic
   
   # Replace revised cells with span-wrapped HTML
-  for (j in seq_along(indic[, -1])) {
-    indic_colored[[j+1]] <- ifelse(
-      revision_table[[j]], 
-      sprintf("<span style='background-color:orange;'>%s</span>", indic[[j+1]]),
-                                                            as.character(indic[[j+1]])
+  for (c_index in seq_along(indic[, -1])) {
+    indic_colored[[c_index + 1]] <- ifelse(
+      revision_table[[c_index + 1]], 
+      sprintf("<span style='background-color:orange;'>%s</span>", indic[[c_index + 1]]),
+                                                            as.character(indic[[c_index + 1]])
     )
   }
   
   diff_table <- diff_list[[index]]
   
   revision_sentences <- ""
-  row_ids <- diff_table[[1]]   # assume first column is the row identifier
+  row_ids <- diff_table[[1]]   # first column is the row identifier
   
-  for(row_index in seq_len(nrow(diff_table))) {
-    for(column_index in seq_len(ncol(diff_table[, -1]))) {
-      if (revision_table[row_index, column_index]) {
+  for(r_index in seq_len(nrow(diff_table))) {
+    for(c_index in seq_len(ncol(diff_table[, -1]))) {
+      if (revision_table[r_index, c_index + 1]) {
         # Get the value from diff_table (skip first column for column_index offset)
-        value <- diff_table[[column_index + 1]][row_index]
+        value <- diff_table[[c_index + 1]][r_index]
         
         # Get identifiers for row and column
-        row_label <- row_ids[row_index]
-        col_label <- names(diff_table)[column_index + 1]
+        row_label <- row_ids[r_index]
+        col_label <- names(diff_table)[c_index + 1]
         
         revision_sentences <- paste0(
           revision_sentences,
@@ -54,7 +54,7 @@ for (indic in indics) {
   # Build HTML table (escape = FALSE to allow <span> rendering)
   table <- kable(indic_colored, format = "html", escape = FALSE)
   
-  # Build part of email body
+  # Build email body
   part <- glue("
   <span style='color:blue; font-weight:bold;'>{names(indics)[index]}</span>
   {table}
